@@ -27,16 +27,16 @@ class AuthController extends Controller
 
     public function signup(Request $request)
     {
-        $validator = Validator::make($request->all() , [
+        $validators = Validator::make($request->all() , [
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|confirmed',
             'img' => 'required|mimes:jpg,jpeg,png'
         ]);
 
-        if ($validator->fails())
+        if ($this->CheckValidations($validators))
         {
-            return response()->json(['status' => 'FAIL' , 'errors' => $validator->messages()] , 200);
+            return $this->ReturnErrorsResponse($validators);
         }
 
         $file = $request->img;
@@ -60,12 +60,12 @@ class AuthController extends Controller
             'password' => 'required|string',
             'remember_me' => 'boolean'
         ]);
-        if ($validators->fails())
+
+        if ($this->CheckValidations($validators))
         {
-            return response()->json([
-                'errors' => $validators->messages()
-            ], 200);
+            return $this->ReturnErrorsResponse($validators);
         }
+
         if (!Auth::attempt(request(['email', 'password'])))
             return response()->json([
                 'errors' => 'Unauthorized'
@@ -86,15 +86,15 @@ class AuthController extends Controller
         }
     }
 
-    public function user()
-    {
-        return response()->json(\auth('api')->user());
-    }
-
     public function refreshToken(Request $request)
     {
         $user = $request->user();
         $request->user()->token()->revoke();
         return $this->CreateAndReturnNewToken($user , $request);
+    }
+
+    public function user()
+    {
+        return response()->json(\auth('api')->user());
     }
 }

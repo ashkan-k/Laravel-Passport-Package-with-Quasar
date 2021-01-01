@@ -33,6 +33,16 @@ trait UserTrait
         return response()->json(['status' => $status, 'message' => $message] , 200);
     }
 
+    public function CheckValidations($validators)
+    {
+        return $validators->fails();
+    }
+
+    public function ReturnErrorsResponse($validators)
+    {
+        return response()->json(['status' => 'Error', 'errors' => $validators->messages()], 200);
+    }
+
     public function CreateAndReturnNewToken($user , $request)
     {
         $tokenResult = $user->createToken('Personal Access Token');

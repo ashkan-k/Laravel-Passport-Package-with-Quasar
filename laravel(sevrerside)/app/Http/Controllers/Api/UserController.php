@@ -28,8 +28,9 @@ class UserController extends Controller
             'img' => 'required|mimes:jpg,png,jpeg'
         ]);
 
-        if ($validators->fails()) {
-            return response()->json(['status' => 'Error', 'errors' => $validators->messages()], 200);
+        if ($this->CheckValidations($validators))
+        {
+            return $this->ReturnErrorsResponse($validators);
         }
 
         $file_name = $this->UploadImage($request->img);
@@ -56,8 +57,9 @@ class UserController extends Controller
             'img' => 'mimes:jpg,png,jpeg',
         ]);
 
-        if ($validators->fails()) {
-            return response()->json(['status' => 'Error', 'errors' => $validators->messages()], 200);
+        if ($this->CheckValidations($validators))
+        {
+            return $this->ReturnErrorsResponse($validators);
         }
 
         $file_name =  $request->file('img')  ?  $this->UploadImage($request->file('img'))  :  $request->lastImage;

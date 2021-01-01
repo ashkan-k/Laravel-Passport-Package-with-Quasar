@@ -104,7 +104,9 @@ export default {
           /// /////////////////////////////////////
           console.log('Your Token : ', localStorage.token)
 
-          window.location.href = '/profile'
+          app.$router.push('/profile')
+
+          // window.location.href = '/profile'
         }
       })
     },
